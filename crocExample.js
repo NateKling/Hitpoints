@@ -1,16 +1,15 @@
 console.log('connected');
 import van from "vanjs-core";
-const {a,div,li,p,ul,img} = van.tags;
+const {a,div,li,p,ul,img,button} = van.tags;
 const rive= require ('@rive-app/canvas');
+import { Rive, EventType, RiveEventType } from '@rive-app/canvas';
 const logo = new URL('./assets/baby.png',import.meta.url);
 console.log(logo);
 
-/*
-const imgElement = document.createElement('img');
-imgElement.src = logo;
-//imgElement.src = logo;
-document.body.appendChild(imgElement);
-*/
+const sounds = require('/sounds.js');
+
+//const audio_hey = new Audio( new URL('./assets/hey.wav',import.meta.url));
+
 
 const canvas = document.createElement('canvas');
 canvas.style = 'position:sticky;z-index:10;top:20px;';
@@ -36,36 +35,44 @@ function calculateScrollPercentage() {
 
 
 let stateMachineScrollInput;
+let blinkInput;
 
 const riveInstance = new rive.Rive({
     src: new URL('./assets/croc.riv',import.meta.url),
-    //src: "https://cdn.rive.app/animations/vehicles.riv",
-    // OR the path to a discoverable and public Rive asset
-    // src: '/public/example.riv',
     canvas: canvas,
     autoplay: true,
     // artboard: "Arboard", // Optional. If not supplied the default is selected
     stateMachines: "State Machine 1",
-    
-
     onLoad: () => {
       riveInstance.resizeDrawingSurfaceToCanvas();
       const inputs = riveInstance.stateMachineInputs("State Machine 1");
-
       //get Inputs to adjust later
         stateMachineScrollInput = inputs.find(i => i.name === 'Rise From Water');
-            
+        blinkInput = inputs.find(i=>i.name ==='Blink');
     },
 });
 
-/*
-window.addEventListener('scroll', () => {
-    stateMachineScrollInput.value = calculateScrollPercentage();
+function onRiveEventReceived(riveEvent) {
+    const eventData = riveEvent.data;
+    const eventProperties = eventData.properties;
+    console.log('Recieved Rive Event!: ',eventData.name);
+    if (eventData.name == 'talkEvent'){
+        sounds.hey.play();
+    }
     
-});
-*/
+}
+riveInstance.on(EventType.RiveEvent,onRiveEventReceived); //Sets up a listener on our rive instance and connects it to recieving function
 
 document.onscroll = () => {    
     const scrollPercentage = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
         stateMachineScrollInput.value = scrollPercentage;
     };
+
+function triggerBlink(){
+    console.log('triggering blink');
+    blinkInput.fire();
+    sounds.squish.play();
+}
+
+const blinkButton = div(button({onclick:triggerBlink},'BLINK'));
+van.add(document.body,blinkButton);
