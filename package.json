@@ -1,19 +1,28 @@
 {
   "name": "hitpoints",
   "version": "1.0.0",
+  "proxy": "http://localhost:3000",
   "scripts": {
-    "start": "parcel index.html",
-    "croc": "parcel crocExample.html"
+    "start:parcel": "parcel public/login.html  public/game.html --dist-dir public/dist",
+    "start:server": "node server.js",
+    "start": "concurrently \"npm run start:server\" \"npm run start:parcel\"",
+    "croc": "parcel public/crocExample.html",
+    "game": "parcel public/game.html",
+    "login": "parcel public/login.html"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "concurrently": "^9.1.2",
     "parcel": "^2.14.2"
   },
   "dependencies": {
     "@rive-app/canvas": "^2.26.5",
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "vanjs-core": "^1.5.3"
   }
 }

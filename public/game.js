@@ -3,23 +3,26 @@ import van from "vanjs-core";
 const {a,div,li,p,ul,img} = van.tags;
 const rive= require ('@rive-app/canvas');
 import { Rive, EventType, RiveEventType } from '@rive-app/canvas';
+const sounds = require('./utils/sounds.js');
 
-const sounds = require('/sounds.js');
-
+import { io } from "socket.io-client";
+const socket = io('http://localhost:3000');
 
 const canvas = document.createElement('canvas');
-canvas.style = 'position:sticky;z-index:10;top:20px;';
+//canvas.style = 'position:sticky;z-index:10;top:20px;';
 canvas.width = 130;
 canvas.height = 320;
 document.body.appendChild(canvas);
 
 
 let playerName = 'Nate';
+let room = 'myRoom';
 let hp = '100';
 let laserDamage = 1;
+socket.emit('joinRoom',{playerName,room});
 
 const riveInstance = new rive.Rive({
-    src: new URL('./assets/hitpoints1.riv',import.meta.url),
+    src: new URL('./assets/rive/hitpoints1.riv',import.meta.url),
     canvas: canvas,
     autoplay: true,
     artboard: "Main", // Optional. If not supplied the default is selected
