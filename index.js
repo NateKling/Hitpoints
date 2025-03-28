@@ -14,7 +14,7 @@ canvas.height = 320;
 document.body.appendChild(canvas);
 
 
-let playerName = 'Steve';
+let playerName = 'Nate';
 let hp = '100';
 let laserDamage = 1;
 
@@ -50,7 +50,7 @@ function onRiveEventReceived(riveEvent) {
 }
 
 function resizeCanvas() {
-    rive.resizeDrawingSurfaceToCanvas();
+    riveInstance.resizeDrawingSurfaceToCanvas();
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas(); // Call initially to set the size
