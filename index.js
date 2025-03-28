@@ -2,70 +2,56 @@ console.log('connected');
 import van from "vanjs-core";
 const {a,div,li,p,ul,img} = van.tags;
 const rive= require ('@rive-app/canvas');
-const logo = new URL('./assets/baby.png',import.meta.url);
-console.log(logo);
+import { Rive, EventType, RiveEventType } from '@rive-app/canvas';
 
-/*
-const imgElement = document.createElement('img');
-imgElement.src = logo;
-//imgElement.src = logo;
-document.body.appendChild(imgElement);
-*/
+const sounds = require('/sounds.js');
+
 
 const canvas = document.createElement('canvas');
 canvas.style = 'position:sticky;z-index:10;top:20px;';
-canvas.width = 200;
-canvas.height = 200;
+canvas.width = 130;
+canvas.height = 320;
 document.body.appendChild(canvas);
 
-let currentScroll =0;
 
-van.add(document.body, div({style:'height:3000px;width: 100%;'},'vvvvvvvvvvvvvvvvvv'));
-
-// Function to calculate the scroll percentage
-function calculateScrollPercentage() {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop; // Current vertical scroll position
-    
-    const scrollHeight = document.documentElement.scrollHeight ; // Total scrollable height
-    console.log(scrollTop ," / ", scrollHeight);
-    const scrollPercentage = (scrollTop / scrollHeight) * 100; // Scroll percentage calculation
-    console.log('scroll Percentage: ' + scrollPercentage);
-   // return Math.min(Math.max(scrollPercentage, 0), 100); // Clamped to 0-100 range
-   return scrollPercentage;
-}
-
-
-let stateMachineScrollInput;
+let playerName = 'Steve';
+let hp = '100';
+let laserDamage = 1;
 
 const riveInstance = new rive.Rive({
-    src: new URL('./assets/croc.riv',import.meta.url),
-    //src: "https://cdn.rive.app/animations/vehicles.riv",
-    // OR the path to a discoverable and public Rive asset
-    // src: '/public/example.riv',
+    src: new URL('./assets/hitpoints1.riv',import.meta.url),
     canvas: canvas,
     autoplay: true,
-    // artboard: "Arboard", // Optional. If not supplied the default is selected
-    stateMachines: "State Machine 1",
-    
-
+    artboard: "Main", // Optional. If not supplied the default is selected
+    stateMachines: "Main_StateMachine",
+   
     onLoad: () => {
       riveInstance.resizeDrawingSurfaceToCanvas();
-      const inputs = riveInstance.stateMachineInputs("State Machine 1");
-
-      //get Inputs to adjust later
-        stateMachineScrollInput = inputs.find(i => i.name === 'Rise From Water');
-            
+      const inputs = riveInstance.stateMachineInputs("Main_StateMachine");
+      setRiveText("P1Label",playerName); //Needs to be located in onLoad at first , otherwise its called before the rive app is loaded in
+      setRiveText("HPLabel",hp);
     },
 });
+riveInstance.on(EventType.RiveEvent,onRiveEventReceived);
 
-/*
-window.addEventListener('scroll', () => {
-    stateMachineScrollInput.value = calculateScrollPercentage();
-    
-});
-*/
 
-document.onscroll = () => {    
-    const scrollPercentage = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
-        stateMachineScrollInput.value = scrollPercentage;
-    };
+function setRiveText(runName,text)
+{
+    riveInstance.setTextRunValue(runName, text);
+}
+
+function onRiveEventReceived(riveEvent) {
+    const eventData = riveEvent.data;
+    //const eventProperties = eventData.properties;
+    console.log('Recieved Rive Event!: ',eventData.name);
+    if (eventData.name == 'FireEvent'){
+        sounds.laser1.play();
+    }
+}
+
+function resizeCanvas() {
+    rive.resizeDrawingSurfaceToCanvas();
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas(); // Call initially to set the size
+

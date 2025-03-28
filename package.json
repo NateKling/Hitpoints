@@ -2,7 +2,8 @@
   "name": "hitpoints",
   "version": "1.0.0",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "parcel index.html",
+    "croc": "parcel crocExample.html"
   },
   "keywords": [],
   "author": "",
