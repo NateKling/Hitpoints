@@ -7,6 +7,7 @@ const sounds = require('./utils/sounds.js');
 
 import { io } from "socket.io-client";
 const socket = io('http://localhost:3000');
+//const socket = io();
 
 const canvas = document.createElement('canvas');
 //canvas.style = 'position:sticky;z-index:10;top:20px;';
@@ -16,10 +17,11 @@ document.body.appendChild(canvas);
 
 
 let playerName = 'Nate';
-let room = 'myRoom';
+let room = 'ThisRoom';
 let hp = '100';
 let laserDamage = 1;
-socket.emit('joinRoom',{playerName,room});
+
+socket.emit('joinRoom',{'username':playerName,'room':room});
 
 const riveInstance = new rive.Rive({
     src: new URL('./assets/rive/hitpoints1.riv',import.meta.url),
