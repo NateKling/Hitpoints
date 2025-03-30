@@ -20,38 +20,20 @@ io.on("connection", (socket) => {
     socket.on('joinRoom',({username,room})=>{
         console.log(` ${username} joined room: ${room}`);
     });
+    //socket emit sends a signal to the client that sent the message
+    //socket.emit('message',formatMessage(botName,`welcome to chatcord channel: ${room}, ${username}`)); 
+    // socket broadcast emit , sends a signal to all other clients except the one who initiated the signal
+    //socket.broadcast.emit('message',formatMessage(botName,`${username} has joined the chat`)); // this broadcasts to all clients except the one connecting
   });
   
   server.listen(3000, () => {
     console.log("Socket.IO server is running on port 3000");
   });
   
+
+
+
 /*
-
-//set static folder
-app.use(express.static(path.join(__dirname,'public', "dist")));
-//app.use(cors()); // Enable CORS for all routes
-
-app.use(cors({
-    origin: "http://localhost:1234/game.html", // Replace with your Parcel server URL
-    methods: ["GET", "POST"],
-  }));
- 
-  app.use(express.static("public"));
-
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-  });
-
-  
-//server.listen(PORT, ()=> console.log(`SERVER running on port ${PORT}`));  
-app.on("request", (req) => {
-    console.log(`Request received: ${req.url}`);
-  });
-  
-console.log('server test');
-const botName = 'chatCordBot';
-
 io.on('connection',socket =>{
     console.log("A user connected:", socket.id);
     socket.on('joinRoom',({username,room})=>{

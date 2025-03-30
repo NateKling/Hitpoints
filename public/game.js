@@ -1,27 +1,38 @@
 console.log('connected');
+
+
 import van from "vanjs-core";
 const {a,div,li,p,ul,img} = van.tags;
 const rive= require ('@rive-app/canvas');
 import { Rive, EventType, RiveEventType } from '@rive-app/canvas';
 const sounds = require('./utils/sounds.js');
+const qs = require('qs');
 
 import { io } from "socket.io-client";
 const socket = io('http://localhost:3000');
-//const socket = io();
+
 
 const canvas = document.createElement('canvas');
-//canvas.style = 'position:sticky;z-index:10;top:20px;';
 canvas.width = 130;
 canvas.height = 320;
 document.body.appendChild(canvas);
 
+let username='user';
+let room='';
 
-let playerName = 'Nate';
-let room = 'ThisRoom';
+const loginData = Qs.parse(location.search,{
+    ignoreQueryPrefix : true
+});
+if (loginData.username != undefined) { // if we are offline, ignore
+username = loginData.username;
+room = loginData.room;
+}
+
+
 let hp = '100';
 let laserDamage = 1;
 
-socket.emit('joinRoom',{'username':playerName,'room':room});
+//socket.emit('joinRoom',{'username':username,'room':room});
 
 const riveInstance = new rive.Rive({
     src: new URL('./assets/rive/hitpoints1.riv',import.meta.url),
@@ -33,7 +44,7 @@ const riveInstance = new rive.Rive({
     onLoad: () => {
       riveInstance.resizeDrawingSurfaceToCanvas();
       const inputs = riveInstance.stateMachineInputs("Main_StateMachine");
-      setRiveText("P1Label",playerName); //Needs to be located in onLoad at first , otherwise its called before the rive app is loaded in
+      setRiveText("P1Label",username); //Needs to be located in onLoad at first , otherwise its called before the rive app is loaded in
       setRiveText("HPLabel",hp);
     },
 });

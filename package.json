@@ -4,7 +4,7 @@
   "proxy": "http://localhost:3000",
   "scripts": {
     "start:parcel": "parcel public/login.html  public/game.html --dist-dir public/dist",
-    "start:server": "node server.js",
+    "start:server": "nodemon server.js",
     "start": "concurrently \"npm run start:server\" \"npm run start:parcel\"",
     "croc": "parcel public/crocExample.html",
     "game": "parcel public/game.html",
@@ -16,6 +16,7 @@
   "description": "",
   "devDependencies": {
     "concurrently": "^9.1.2",
+    "nodemon": "^3.1.9",
     "parcel": "^2.14.2"
   },
   "dependencies": {
