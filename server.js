@@ -20,12 +20,17 @@ io.on("connection", (socket) => {
     socket.on('joinRoom',({username,room})=>{
         console.log(` ${username} joined room: ${room}`);
     });
+    socket.on('fireLaser',({username,room,damage})=>{
+        console.log(` ${username} fired a laser in room: ${room} with damage: ${damage}`);
+        socket.broadcast.emit('receiveLaser',({damage}));
+    })
     //socket emit sends a signal to the client that sent the message
     //socket.emit('message',formatMessage(botName,`welcome to chatcord channel: ${room}, ${username}`)); 
     // socket broadcast emit , sends a signal to all other clients except the one who initiated the signal
     //socket.broadcast.emit('message',formatMessage(botName,`${username} has joined the chat`)); // this broadcasts to all clients except the one connecting
   });
-  
+ 
+
   server.listen(3000, () => {
     console.log("Socket.IO server is running on port 3000");
   });

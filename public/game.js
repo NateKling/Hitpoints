@@ -31,8 +31,9 @@ room = loginData.room;
 
 let hp = '100';
 let laserDamage = 1;
-
-//socket.emit('joinRoom',{'username':username,'room':room});
+let hpHitTrigger;
+let mainArtboard;
+socket.emit('joinRoom',{'username':username,'room':room});
 
 const riveInstance = new rive.Rive({
     src: new URL('./assets/rive/hitpoints1.riv',import.meta.url),
@@ -44,8 +45,11 @@ const riveInstance = new rive.Rive({
     onLoad: () => {
       riveInstance.resizeDrawingSurfaceToCanvas();
       const inputs = riveInstance.stateMachineInputs("Main_StateMachine");
+      hpHitTrigger = inputs.find((input) => input.name === "HPHitTrigger");
+    //mainArtboard = riveInstance.artboard("Main");
       setRiveText("P1Label",username); //Needs to be located in onLoad at first , otherwise its called before the rive app is loaded in
       setRiveText("HPLabel",hp);
+
     },
 });
 riveInstance.on(EventType.RiveEvent,onRiveEventReceived);
@@ -62,7 +66,25 @@ function onRiveEventReceived(riveEvent) {
     console.log('Recieved Rive Event!: ',eventData.name);
     if (eventData.name == 'FireEvent'){
         sounds.laser1.play();
+        socket.emit('fireLaser',{'username':username,'room':room,'damage':laserDamage});
     }
+    else if (eventData.name == 'HitEvent'){
+        console.log('Hit Event Triggered!');
+        sounds.hit.play();
+        hpHitTrigger.fire();
+        
+        setRiveText("HPLabel",hp);
+        /*
+        if (hp <= 0){
+            sounds.gameOver.play();
+            hp = 0;
+            setRiveText("HPLabel",hp);
+            setRiveText("P1Label",username + " is dead");
+            socket.emit('gameOver',{'username':username,'room':room});
+        }
+            */
+        }
+            
 }
 
 function resizeCanvas() {
@@ -71,3 +93,10 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas(); // Call initially to set the size
 
+socket.on('receiveLaser',data=>{
+    console.log('Received laser data: ',data.damage);
+   //var artboard= riveInstance.artboard("Main");
+    riveInstance.fireStateAtPath('LaserIn','Shipscreen');
+    hp -= data.damage;
+    console.log('hp is now: ',hp);
+});
