@@ -32,7 +32,6 @@ room = loginData.room;
 let hp = '100';
 let laserDamage = 1;
 let hpHitTrigger;
-let mainArtboard;
 socket.emit('joinRoom',{'username':username,'room':room});
 
 const riveInstance = new rive.Rive({
@@ -71,9 +70,9 @@ function onRiveEventReceived(riveEvent) {
     else if (eventData.name == 'HitEvent'){
         console.log('Hit Event Triggered!');
         sounds.hit.play();
-        hpHitTrigger.fire();
+        //hpHitTrigger.fire();
         
-        setRiveText("HPLabel",hp);
+        setRiveText("HPLabel",hp.toString());
         /*
         if (hp <= 0){
             sounds.gameOver.play();
