@@ -30,17 +30,22 @@
 							required
 						/>
 					</div>
-					<div class="form-control">
-						<label for="room">Room</label>
-						<select name="room" id="room">
-							<option value="0">Starfield</option>
-							<option value="1">Ice Base</option>
-							<option value="2">Glorb Realm</option>
-							<option value="3">Imperial Outpost</option>
-						</select>
-					</div>
-					<button type="submit" class="btn">Join Room</button>
+					<button type="submit" class="btn">Create Room</button>
 				</form>
+				<form>
+				<div class="form-control">
+					<label for="roomID">Room ID</label>
+					<input
+						type="text"
+						name="roomID"
+						id="roomID"
+						placeholder="Enter room ID..."
+						required
+					/>
+				</div>
+				
+				<button type="submit" class="btn">Join Room</button>
+			</form>
 			</main>
 		</div>
 	</body>
