@@ -11,6 +11,8 @@ const qs = require('qs');
 import { io } from "socket.io-client";
 const socket = io('http://localhost:3000');
 
+//const hitpointsRive = './assets/rive/hitpoints1.riv';
+const hitpointsRive = './assets/rive/hitpoints_core.riv';
 
 const canvas = document.createElement('canvas');
 canvas.width = 130;
@@ -29,13 +31,13 @@ room = loginData.room;
 }
 
 
-let hp = '100';
+let hp = 100;
 let laserDamage = 1;
 let hpHitTrigger;
 socket.emit('joinRoom',{'username':username,'room':room});
 
 const riveInstance = new rive.Rive({
-    src: new URL('./assets/rive/hitpoints1.riv',import.meta.url),
+    src: new URL('./assets/rive/hitpoints_core.riv',import.meta.url),
     canvas: canvas,
     autoplay: true,
     artboard: "Main", // Optional. If not supplied the default is selected
@@ -44,11 +46,13 @@ const riveInstance = new rive.Rive({
     onLoad: () => {
       riveInstance.resizeDrawingSurfaceToCanvas();
       const inputs = riveInstance.stateMachineInputs("Main_StateMachine");
+      setRiveText("HP",hp.toString());
+      /*
       hpHitTrigger = inputs.find((input) => input.name === "HPHitTrigger");
     //mainArtboard = riveInstance.artboard("Main");
       setRiveText("P1Label",username); //Needs to be located in onLoad at first , otherwise its called before the rive app is loaded in
       setRiveText("HPLabel",hp);
-
+        */
     },
 });
 riveInstance.on(EventType.RiveEvent,onRiveEventReceived);
@@ -71,8 +75,8 @@ function onRiveEventReceived(riveEvent) {
         console.log('Hit Event Triggered!');
         sounds.hit.play();
         //hpHitTrigger.fire();
-        
-        setRiveText("HPLabel",hp.toString());
+        hp = hp-1;
+        setRiveText("HP",hp.toString());
         /*
         if (hp <= 0){
             sounds.gameOver.play();
