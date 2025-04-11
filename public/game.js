@@ -22,18 +22,23 @@ document.body.appendChild(canvas);
 let username='user';
 let room='';
 
+let hp = 100;
+let laserDamage = 1;
+let hitTrigger;
+let roomName = 'Z1X0'
+
 const loginData = Qs.parse(location.search,{
     ignoreQueryPrefix : true
 });
 if (loginData.username != undefined) { // if we are offline, ignore
 username = loginData.username;
-room = loginData.room;
+room = loginData.roomId;
+roomName = room;
+hp = loginData.initialHealth;
 }
 
+//Gameplay Variables
 
-let hp = 100;
-let laserDamage = 1;
-let hpHitTrigger;
 socket.emit('joinRoom',{'username':username,'room':room});
 
 const riveInstance = new rive.Rive({
@@ -46,60 +51,78 @@ const riveInstance = new rive.Rive({
     onLoad: () => {
       riveInstance.resizeDrawingSurfaceToCanvas();
       const inputs = riveInstance.stateMachineInputs("Main_StateMachine");
+      
+      // Set Initial States and Grab References to Triggers
       setRiveText("HP",hp.toString());
-      /*
-      hpHitTrigger = inputs.find((input) => input.name === "HPHitTrigger");
-    //mainArtboard = riveInstance.artboard("Main");
-      setRiveText("P1Label",username); //Needs to be located in onLoad at first , otherwise its called before the rive app is loaded in
-      setRiveText("HPLabel",hp);
-        */
+      setRiveText("RoomID",'SECTOR: '+ roomName);
+      hitTrigger = inputs.find((input) => input.name === "Hit");
+      PowerOn();
+      
     },
 });
+function resizeCanvas() {
+    riveInstance.resizeDrawingSurfaceToCanvas();
+}
+//Rive Setup
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas(); // Call initially to set the size
 riveInstance.on(EventType.RiveEvent,onRiveEventReceived);
 
-
+//Rive Util
 function setRiveText(runName,text)
 {
     riveInstance.setTextRunValue(runName, text);
 }
-
 function onRiveEventReceived(riveEvent) {
     const eventData = riveEvent.data;
-    //const eventProperties = eventData.properties;
     console.log('Recieved Rive Event!: ',eventData.name);
     if (eventData.name == 'FireEvent'){
-        sounds.laser1.play();
-        socket.emit('fireLaser',{'username':username,'room':room,'damage':laserDamage});
+        Fire();
     }
-    else if (eventData.name == 'HitEvent'){
-        console.log('Hit Event Triggered!');
-        sounds.hit.play();
-        //hpHitTrigger.fire();
-        hp = hp-1;
-        setRiveText("HP",hp.toString());
-        /*
-        if (hp <= 0){
-            sounds.gameOver.play();
-            hp = 0;
-            setRiveText("HPLabel",hp);
-            setRiveText("P1Label",username + " is dead");
-            socket.emit('gameOver',{'username':username,'room':room});
-        }
-            */
-        }
-            
 }
 
-function resizeCanvas() {
-    riveInstance.resizeDrawingSurfaceToCanvas();
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas(); // Call initially to set the size
 
+//Socket Logic
 socket.on('receiveLaser',data=>{
     console.log('Received laser data: ',data.damage);
-   //var artboard= riveInstance.artboard("Main");
-    riveInstance.fireStateAtPath('LaserIn','Shipscreen');
-    hp -= data.damage;
-    console.log('hp is now: ',hp);
+    Hit(data.damage);
 });
+
+
+
+
+//Gameplay Functions
+
+function PowerOn(){
+    sounds.powerOn.play();
+}
+
+function Fire(){
+    sounds.laser1.play();
+        socket.emit('fireLaser',{'username':username,'room':room,'damage':laserDamage});
+}
+
+function Hit(damage){
+    hp -= damage;  //Deal Damage
+    hitTrigger.fire(); //Signal Rive File to play hit Animation
+    sounds.hit.play(); //Play Sound Fx
+    setRiveText("HP",hp.toString());  //update HP Text
+    console.log('hp is now: ',hp);
+        
+}
+function ShieldUp(){
+    console.log('shield Up!');
+}
+function ShieldDown(){
+    console.log('shield Down!');
+}
+
+
+/*
+//IMPORTANT RIVE NOTES
+    riveInstance.fireStateAtPath('LaserIn','Shipscreen');  //fires a trigger on a nested artboard ('triggername','artboardname')
+    hitTrigger = inputs.find((input) => input.name === "Hit");  // grab reference to trigger to later use with hitTrigger.fire() , name must be set as 'export' in the riv file
+    
+    riveInstance.on(EventType.RiveEvent,onRiveEventReceived);  //Sets up a listener for event triggers, assign a callback method (example:onRiveEventRecieved)
+
+*/

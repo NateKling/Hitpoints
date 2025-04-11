@@ -11,6 +11,7 @@ const server = http.createServer(app);
 
 const io = new Server(server);
 
+let rooms = [];
 
 const PORT = process.env.PORT || 3000;
 
@@ -35,6 +36,25 @@ io.on("connection", (socket) => {
     console.log("Socket.IO server is running on port 3000");
   });
   
+
+
+
+
+
+ 
+  function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+  
+  const randomString = generateRandomString(4);
+  
+
 
 
 
