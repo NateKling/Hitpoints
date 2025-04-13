@@ -20,10 +20,12 @@ io.on("connection", (socket) => {
     console.log("A user connected:", socket.id);
     socket.on('joinRoom',({username,room})=>{
         console.log(` ${username} joined room: ${room}`);
+        socket.join(room);
+        socket.broadcast.to(room).emit('userJoined',({username:username}));
     });
     socket.on('fireLaser',({username,room,damage})=>{
         console.log(` ${username} fired a laser in room: ${room} with damage: ${damage}`);
-        socket.broadcast.emit('receiveLaser',({damage}));
+        socket.broadcast.to(room).emit('receiveLaser',({damage}));
     })
     //socket emit sends a signal to the client that sent the message
     //socket.emit('message',formatMessage(botName,`welcome to chatcord channel: ${room}, ${username}`)); 

@@ -112,6 +112,7 @@
     }
     input[type="number"] {
       -moz-appearance: textfield;  /* Firefox */
+      appearance: textfield;
       width: 100px; /* Increased width to accommodate centered text better */
       padding: 10px;
       background-color: #222;
@@ -302,6 +303,7 @@
   <p class="below-box-text">Tabletop Companion App</p>
 
   <script>
+    let clickedStartGame =false;
     document.getElementById('startGameButton').addEventListener('click', function() {
       const username = document.getElementById('username').value;
       const initialHealth = document.getElementById('initialHealth').value;
@@ -321,12 +323,14 @@
       document.body.style.backgroundImage = 'linear-gradient(to bottom, black, black), none';
       document.body.style.backgroundColor = 'black';
       // Call BeginGame function after animation completes
-      setTimeout(BeginGame, 2000); // Changed to 2000 for 2 seconds
+      clickedStartGame = true;
+      setTimeout(BeginGame, 1400); // Changed to 2000 for 2 seconds
     });
 
     document.getElementById('joinGameButton').addEventListener('click', function() {
       if (joinGameButton.classList.contains('active')) {
         const username = document.getElementById('username').value;
+        const initialHealth = document.getElementById('initialHealth').value;
         const roomId = document.getElementById('roomId').value;
         console.log(`Joining room ${roomId} as ${username}`);
          // Add class to trigger animation
@@ -342,7 +346,7 @@
         document.body.style.backgroundImage = 'linear-gradient(to bottom, black, black), none';
         document.body.style.backgroundColor = 'black';
         // Call BeginGame function after animation completes
-        setTimeout(BeginGame, 2000); // Changed to 2000 for 2 seconds
+        setTimeout(BeginGame, 1400); // Changed to 2000 for 2 seconds
       }
     });
 
@@ -385,7 +389,7 @@
       const initialHealth = document.getElementById('initialHealth').value;
       let roomId = document.getElementById('roomId').value;
 
-      if (roomId == ''){
+      if (roomId == '' || clickedStartGame){  //generate random string for a new game
         roomId = generateRandomString(4);
       }
 

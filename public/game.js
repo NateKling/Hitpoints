@@ -88,6 +88,9 @@ socket.on('receiveLaser',data=>{
     Hit(data.damage);
 });
 
+socket.on('userJoined',data=>{
+    console.log(`user joined room. welcome , ${data.username}`)
+})
 
 
 
