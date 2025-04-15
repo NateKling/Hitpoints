@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
 
   //CODE TO SERVE THE HTML SIDE OF THE SERVER ON PORT 4000
 
-  const PORT_APP = 4000;
+  const PORT_APP = 443; //instead of 4000, 443 is https, 80 is http
   const app2 = express();
 
   //serve static files for app
