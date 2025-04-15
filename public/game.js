@@ -9,9 +9,11 @@ const sounds = require('./utils/sounds.js');
 const qs = require('qs');
 
 import { io } from "socket.io-client";
-const socket = io('http://localhost:3000');
+import CONFIG from "./utils/config.js";
+const socket = io(CONFIG.SOCKET_URL);
+//const socket = io('http://localhost:3000');
 
-//const hitpointsRive = './assets/rive/hitpoints1.riv';
+//alert(CONFIG.SOCKET_URL);
 const hitpointsRive = './assets/rive/hitpoints_core.riv';
 
 const canvas = document.createElement('canvas');

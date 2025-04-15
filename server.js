@@ -6,14 +6,15 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 const formatMessage = require('./public/utils/messages');
 
-const app = express();
-const server = http.createServer(app);
+const app1 = express();
+const server = http.createServer(app1);
 
 const io = new Server(server);
 
 let rooms = [];
 
-const PORT = process.env.PORT || 3000;
+const PORT_MULTIPLAYER = process.env.PORT || 3000;
+
 
 
 io.on("connection", (socket) => {
@@ -34,10 +35,25 @@ io.on("connection", (socket) => {
   });
  
 
-  server.listen(3000, () => {
+  server.listen(PORT_MULTIPLAYER, () => {
     console.log("Socket.IO server is running on port 3000");
   });
   
+
+  //CODE TO SERVE THE HTML SIDE OF THE SERVER ON PORT 4000
+
+  const PORT_APP = 4000;
+  const app2 = express();
+
+  //serve static files for app
+  app2.use(express.static(path.join(__dirname,"public/dist")));
+
+  app2.get("*",(req,res)=>{
+    res.sendFile(path.join(__dirname,"public/dist","login.html"));
+  })
+  app2.listen(PORT_APP,()=>{
+    console.log(`app server is running on http://localhost:${PORT_APP}`);
+  })
 
 
 
