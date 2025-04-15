@@ -1,5 +1,5 @@
 console.log('connected');
-
+console.log('v 0.05');
 
 import van from "vanjs-core";
 const {a,div,li,p,ul,img} = van.tags;
