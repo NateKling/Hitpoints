@@ -18,7 +18,7 @@ const PORT_MULTIPLAYER = process.env.PORT || 3000;
 
 
 io.on("connection", (socket) => {
-    console.log("A user connected:", socket.id);
+    console.log("A user connected with socket id", socket.id);
     socket.on('joinRoom',({username,room})=>{
         console.log(` ${username} joined room: ${room}`);
         socket.join(room);
@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
 
   //CODE TO SERVE THE HTML SIDE OF THE SERVER ON PORT 4000
 
-  const PORT_APP = 443; //instead of 4000, 443 is https, 80 is http
+  const PORT_APP = 4000; //instead of 4000, 443 is https, 80 is http
   const app2 = express();
 
   //serve static files for app

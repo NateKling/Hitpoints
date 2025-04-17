@@ -1,10 +1,10 @@
 const CONFIG = {
     development: {
-      SOCKET_URL: "https://localhost:443",
+      SOCKET_URL: "https://localhost:3000",
       //WEB_URL: "http://localhost:4000",
     },
     production: {
-      SOCKET_URL: "https://18.222.205.229",
+      SOCKET_URL: "https://18.222.205.229:3000",
       //WEB_URL: "https://your-server-ip:4000",
     },
   };
