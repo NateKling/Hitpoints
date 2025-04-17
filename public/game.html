@@ -6,6 +6,21 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+
+    <progress id="loading-bar" max="100" value="0"></progress>
+    <script>
+    let progress = document.getElementById("loading-bar");
+    let value = 0;
+    function updateProgress() {
+        if (value < 100) {
+        value += 10;
+        progress.value = value;
+        setTimeout(updateProgress, 500);
+        }
+    }
+    updateProgress();
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/qs@6.14.0/dist/qs.min.js"></script>
 
     <script type="module" src="game.js"></script>
