@@ -4,7 +4,7 @@ const CONFIG = {
       //WEB_URL: "http://localhost:4000",
     },
     production: {
-      SOCKET_URL: "https://online.hitcore.app",
+      SOCKET_URL: "https://hitcore.app",
       //SOCKET_URL: "https://18.222.205.229:3000",
       //WEB_URL: "https://your-server-ip:4000",
     },
