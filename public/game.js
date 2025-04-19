@@ -7,6 +7,11 @@ const rive= require ('@rive-app/canvas');
 import { Rive, EventType, RiveEventType } from '@rive-app/canvas';
 const sounds = require('./utils/sounds.js');
 const qs = require('qs');
+import {Howl,Howler} from 'howler';
+
+//var lasSound = new Howl({ src:[new URL('assets/sounds/weapon_laser_009.wav',import.meta.url)],html5:true});
+//var hitSound = new Howl({ src:[new URL('assets/sounds/explosion_small_015.wav',import.meta.url)],html5:true});
+
 
 import { io } from "socket.io-client";
 import CONFIG from "./utils/config.js";
@@ -103,14 +108,16 @@ function PowerOn(){
 }
 
 function Fire(){
-    sounds.laser1.play();
+    //sounds.laser1.play();
+    sounds.las.play();
         socket.emit('fireLaser',{'username':username,'room':room,'damage':laserDamage});
 }
 
 function Hit(damage){
     hp -= damage;  //Deal Damage
     hitTrigger.fire(); //Signal Rive File to play hit Animation
-    sounds.hit.play(); //Play Sound Fx
+    //sounds.hit.play(); //Play Sound Fx
+    sounds.hit.play();
     setRiveText("HP",hp.toString());  //update HP Text
     console.log('hp is now: ',hp);
         

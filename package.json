@@ -25,6 +25,7 @@
   "dependencies": {
     "@rive-app/canvas": "^2.26.5",
     "express": "^4.21.2",
+    "howler": "^2.2.4",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "vanjs-core": "^1.5.3"
