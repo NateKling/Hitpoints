@@ -13,6 +13,7 @@ const io = new Server(server);
 
 let rooms = [];
 
+
 const PORT_MULTIPLAYER = process.env.PORT || 3000;
 
 
@@ -22,7 +23,21 @@ io.on("connection", (socket) => {
     socket.on('joinRoom',({username,room})=>{
         console.log(` ${username} joined room: ${room}`);
         socket.join(room);
-        socket.broadcast.to(room).emit('userJoined',({username:username}));
+        let roomData = findRoom(room);
+        if (roomData != null){
+          //this is second player
+          console.log(roomData);
+          socket.emit('roomData',(roomData));
+          socket.broadcast.to(room).emit('userJoined',({username:username}));
+          
+        }
+        else{
+          //new room first player
+          rooms.push({'roomName':room,'player1' :username});
+          
+        }
+        
+        //need to create a room  and save the user as a string to emit back to get the name of an opponent already in the room
     });
     socket.on('fireLaser',({username,room,damage})=>{
         console.log(` ${username} fired a laser in room: ${room} with damage: ${damage}`);
@@ -34,6 +49,14 @@ io.on("connection", (socket) => {
     //socket.broadcast.emit('message',formatMessage(botName,`${username} has joined the chat`)); // this broadcasts to all clients except the one connecting
   });
  
+  function findRoom(roomid){
+    for (var i =0; i<rooms.length;i++){
+      if (rooms[i].roomName == roomid){
+        return rooms[i];
+      }
+    }
+    return null;
+  }
 
   server.listen(PORT_MULTIPLAYER, () => {
     console.log("Socket.IO server is running on port 3000");

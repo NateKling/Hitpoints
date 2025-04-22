@@ -5,7 +5,7 @@
   "scripts": {
     "start:parcel": "cross-env NODE_ENV=development parcel public/login.html  public/game.html --dist-dir public/dist",
     "start:server": "nodemon server.js",
-    "startConcurrent": "concurrently \"npm run start:server\" \"npm run start:parcel\"",
+    "startDev": "concurrently \"npm run start:server\" \"npm run start:parcel\"",
     "dev": "cross-env NODE_ENV=development parcel public/login.html",
     "game": "parcel public/game.html",
     "login": "parcel public/login.html",
