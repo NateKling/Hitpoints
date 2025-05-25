@@ -5,7 +5,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Exo+2:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: black;
+      background-color: rgba(0, 0, 0, 0.123);
       color: #00ffcc;
       font-family: 'Exo 2', sans-serif;
       display: flex;
@@ -15,7 +15,7 @@
       height: 100vh;
       margin: 0;
       /* Add the gradient to the body */
-      background-image: linear-gradient(to bottom, transparent, #E848AD20),
+      background-image: linear-gradient(to bottom, transparent, #e848ad0e),
                       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath fill='%230077cc' fill-opacity='0.2' d='M0 0h1v1H0V0zm9 0h1v1H9V0zm0 9h1v1H9V9zM0 9h1v1H0V9z'%3E%3C/path%3E%3C/svg%3E");
       background-size: 100%, auto;
       background-position: 0% 100%, 0 0;
@@ -247,8 +247,8 @@
         display: flex; /* Use flexbox to align items horizontally */
         align-items: center; /* Vertically center items */
         gap: 10px; /* Add some gap between the text and the SVG */
-        color: #ff9900;
-        text-shadow: 0 0 5px #ff9900;
+        color: #f8eedf;
+        text-shadow: 0 0 2px #ff9900;
         margin-bottom: 30px;
         font-family: 'Orbitron', sans-serif;
         justify-content: center;
@@ -269,38 +269,54 @@
       transition: transform 0.5s ease-in-out; /* Add smooth transition */
     }
 
+    #loginContent{
+      position : relative;
+      z-index: 1;
+    }
+    #iframeBG{
+      position: fixed; /* Stays in place */
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1; /* Pushes it behind everything */
+      border: none;
+    }
+
   </style>
 </head>
 <body>
+  <iframe src='https://my.spline.design/untitled-ZPCrZyo3D7Clg1NxTuVecM2w/' id="iframeBG" ></iframe>
+  <div id="loginContent">
+    <h1 class="title-above">
+      HitCore
+    </h1>
+    <div class="container">
 
-  <h1 class="title-above">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-crosshair-2"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4"/><path d="M6 12H2"/><path d="M12 6V2"/><path d="M12 22v-4"/><path d="M12 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
-    Hitpoints
-  </h1>
-  <div class="container">
 
-
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input type="text" id="username" value="player">
-    </div>
-
-    <div class="form-group">
-      <label for="initialHealth">Initial Hitpoints:</label>
-      <div class="number-input-wrapper">
-        <input type="number" id="initialHealth" value="50" min="0">
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" value="player">
       </div>
+
+      <div class="form-group">
+        <label for="initialHealth">Initial Hitpoints:</label>
+        <div class="number-input-wrapper">
+          <input type="number" id="initialHealth" value="50" min="0">
+        </div>
+      </div>
+
+      <button id="startGameButton">Start Game</button>
+
+      <div class="join-group">
+        <button id="joinGameButton">Join Game</button>
+        <input type="text" id="roomId" placeholder="Room ID" required>
+      </div>
+
     </div>
-
-    <button id="startGameButton">Start Game</button>
-
-    <div class="join-group">
-      <button id="joinGameButton">Join Game</button>
-      <input type="text" id="roomId" placeholder="Room ID" required>
-    </div>
-
+    <p class="below-box-text">Tabletop Companion App</p>
   </div>
-  <p class="below-box-text">Tabletop Companion App</p>
+  
 
   <script>
     let clickedStartGame =false;

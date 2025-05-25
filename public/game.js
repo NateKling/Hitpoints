@@ -34,10 +34,27 @@ let hp = 100;
 let displayHP = 0;
 let laserDamage = 1;
 let damageCount = 0;
-const damageCountTimeout = 2000; //ms for damage cleartimeout
+let timeoutId;
+const damageCountTimeout = 3000; //ms for damage cleartimeout
 let damageCountTimer ;
 let hitTrigger;
-let roomName = 'Z1X0'
+let roomName = 'Z1X0';
+let dmgIndicatorBool;
+
+let targetInputsLeft =[];
+let targetInputsRight = [];
+let targetBool = false;
+
+
+setTimeout(()=>{
+    let iframeBG = document.getElementById('iframeBG');
+    let iframeDocument = iframeBG.contentDocument || iframeBG.contentWindow.document;
+    let splineLogo = iframeDocument.getElementsByClassName('spline-watermark');
+    console.log(splineLogo[0]);
+    splineLogo.remove();
+},1000);
+
+//splineLogo[0].remove();
 
 const loginData = Qs.parse(location.search,{
     ignoreQueryPrefix : true
@@ -46,7 +63,7 @@ if (loginData.username != undefined) { // if we are offline, ignore
 username = loginData.username;
 room = loginData.roomId;
 roomName = room;
-hp = loginData.initialHealth;
+hp = parseInt(loginData.initialHealth,10);
 targetName = ' ';
 }
 
@@ -70,8 +87,14 @@ const riveInstance = new rive.Rive({
         setRiveText("HP",'0');
       setRiveText("RoomID",'ROOM '+ roomName);
       setRiveText("TargetName",'TARGET: '+targetName);
+      //setRiveText('DamageCount','');
       hitTrigger = inputs.find((input) => input.name === "Hit");
+      dmgIndicatorBool = inputs.find((input)=> input.name === "DmgIndicator");
+      randomTargetButtonChange(1); //start the random button flickering animations
+    console.log('found all triggers');
       PowerOn();
+
+      
       
     },
 });
@@ -94,16 +117,40 @@ function onRiveEventReceived(riveEvent) {
     if (eventData.name == 'FireEvent'){
         Fire();
     }
-    if(eventData.name == 'hpOn'){
+    else if(eventData.name == 'hpOn'){
         fillHP();
     }
+    else if (eventData.name =='ShieldUpEvent'){
+        ShieldUp();
+    }
+    else if(eventData.name == 'ShieldDownEvent'){
+        ShieldDown();
+    }
+    else if (eventData.name == 'ReticleHoverOn'){
+        console.log('reticleHover');
+        sounds.reticleHoverOn.play();
+    }
+    
+    else if (eventData.name == 'ReticleHoverOff'){
+        sounds.reticleHoverOff.play();
+    }
+    else if (eventData.name == 'ShieldHoverOn'){
+        sounds.shieldHoverOn.play();
+    }
+    else if (eventData.name == 'ShieldHoverOff'){
+        sounds.shieldHoverOff.play();
+    }
+    else if (eventData.name == 'hpHover'){
+        sounds.hpHoverOn.play();
+    }
+
 }
 
 
 //Socket Logic
 socket.on('receiveLaser',data=>{
     console.log('Received laser data: ',data.damage);
-    Hit(data.damage);
+    let hitTimeout = setTimeout(()=>Hit(data.damage),700);
 });
 
 socket.on('userJoined',data=>{
@@ -126,12 +173,55 @@ function PowerOn(){
 }
 
 function Fire(){
-    //sounds.laser1.play();
-    //sounds.las.play();
+
+    targetBool = !targetBool;
+    //toggleTargetButtons(0,targetBool);
+    //riveInstance.setBooleanStateAtPath('On',true,'FireBoard/Matrix1/TargetingButton16');
+
+    targetingPatternAnimate();
     addDamageCount();
     playRandomSound(sounds.lasSoundList);
         socket.emit('fireLaser',{'username':username,'room':room,'damage':laserDamage});
+    
 }
+
+
+//targeting pattern functions
+function toggleTargetButtons(num,thisBool,side){
+// 1:left, 2:right, 3:both
+        if(side==0||side==3){
+        riveInstance.setBooleanStateAtPath('On',thisBool,`FireBoard/Matrix1/TargetingButton${num}`);
+        }
+        if(side==1||side==3){
+        riveInstance.setBooleanStateAtPath('On',thisBool,`FireBoard/Matrix2/TargetingButton${num}`);
+        }
+}
+
+function targetingPatternAnimate(){
+    const vertical=[[9,14],[4,8,13,18],[3,7,12,17],[2,6,11,16],[1,5,10,15]];
+
+    for (var i =0; i<vertical.length;i++){
+        vertical[i].forEach((item)=>{
+          setTimeout(()=>{toggleTargetButtons(item,true,3)},(i+1)*10);
+          setTimeout(()=>{toggleTargetButtons(item,false,3)},(i+1)*(220-(i*10)));
+        })
+    }
+}
+function randomTargetButtonChange(index){
+    let sideNum = Math.floor(Math.random() * 2);
+    let ranIndex = randomIntRange(1,17);
+    let onOffRan = Math.floor(Math.random() * 2);
+        if (onOffRan == 1){onOffRan =true;}
+        else{onOffRan = false;}
+    toggleTargetButtons(index,onOffRan,sideNum); // turn off or on a random button, then set up the timer for the next one
+    setTimeout(()=>{randomTargetButtonChange(ranIndex)},300);
+}
+
+
+function randomIntRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
 
 function Hit(damage){
     hp -= damage;  //Deal Damage
@@ -142,24 +232,33 @@ function Hit(damage){
         
 }
 function ShieldUp(){
-    console.log('shield Up!');
-    hp +=1;
+    
+    hp = hp + 1;
+    setRiveText("HP",hp.toString());
     sounds.shield1.play();
+    console.log('shield Up!'+ hp);
 }
 function ShieldDown(){
+    hp = hp - 1;
     console.log('shield Down!');
+    setRiveText("HP",hp.toString());
+    sounds.shieldDown.play();
+    
 }
 
 function addDamageCount(){
-    clearTimeout(damageCountTimer);
+    clearTimeout(timeoutId);
     timeoutId = setTimeout(damageCountClear, damageCountTimeout);
     damageCount +=1;
-    setRiveText(DamageCount,`DAMAGE: [${damageCount}]`);
+    setRiveText('DamageCount',`+[${damageCount}]`);
+    dmgIndicatorBool.value = true;
 }
 
 function damageCountClear(){
     damageCount =0;
-    setRiveText('DamageCount','[]');
+    console.log('cleared');
+    //setRiveText('DamageCount','');
+    dmgIndicatorBool.value = false;
 }
 
 function fillHP(){ //hp fill animation that plays at the beginning
