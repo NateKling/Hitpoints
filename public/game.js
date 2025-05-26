@@ -45,7 +45,7 @@ let targetInputsLeft =[];
 let targetInputsRight = [];
 let targetBool = false;
 
-
+//
 setTimeout(()=>{
     let iframeBG = document.getElementById('iframeBG');
     let iframeDocument = iframeBG.contentDocument || iframeBG.contentWindow.document;
