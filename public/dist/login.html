@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hitpoints</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Exo+2:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>body {
+  color: #0fc;
+  background-color: #0000001f;
+  background-image: linear-gradient(#0000, #e848ad0e), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath fill='%230077cc' fill-opacity='0.2' d='M0 0h1v1H0V0zm9 0h1v1H9V0zm0 9h1v1H9V9zM0 9h1v1H0V9z'%3E%3C/path%3E%3C/svg%3E");
+  background-position: 0 100%, 0 0;
+  background-repeat: no-repeat, repeat;
+  background-size: 100%, auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: "Exo 2", sans-serif;
+  transition: background-position .5s, background-image 2s, background-color 2s;
+  display: flex;
+  box-shadow: 0 0 10px #0077cc80;
+}
+
+body:hover {
+  background-position: 0 0, 0 0;
+}
+
+.container {
+  text-align: center;
+  opacity: 0;
+  background-color: #000000b3;
+  border: 2px solid #0fc;
+  border-radius: 10px;
+  margin-top: 0;
+  padding: 30px;
+  transition: transform .5s ease-in-out;
+  animation: 1.5s .5s forwards fadeIn;
+  transform: translateY(0);
+  box-shadow: 0 -5px 30px #0fcc;
+}
+
+@keyframes pulseGlow {
+  from {
+    box-shadow: 0 -5px 30px #0fcc;
+  }
+
+  to {
+    box-shadow: 0 -5px 30px #0fc6;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+h1 {
+  color: #f90;
+  text-shadow: 0 0 5px #f90;
+  opacity: 0;
+  align-items: center;
+  gap: 10px;
+  margin-top: 0;
+  margin-bottom: 30px;
+  font-family: Orbitron, sans-serif;
+  transition: transform .5s ease-in-out;
+  animation: 1s forwards fadeIn;
+  display: flex;
+  transform: translateY(0);
+}
+
+.form-group {
+  text-align: left;
+  opacity: 0;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15px;
+  transition: transform .5s ease-in-out;
+  animation: 1.5s .8s forwards fadeIn;
+  display: flex;
+  transform: translateY(0);
+}
+
+label {
+  margin-bottom: 8px;
+  display: block;
+}
+
+input[type="text"] {
+  color: #6fd;
+  text-align: center;
+  background-color: #222;
+  border: 1px solid #0fc;
+  border-radius: 5px;
+  width: 150px;
+  padding: 10px;
+  font-family: "Exo 2", sans-serif;
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  appearance: textfield;
+  color: #0fc;
+  text-align: center;
+  background-color: #222;
+  border: 1px solid #0fc;
+  border-radius: 5px;
+  width: 100px;
+  padding: 10px;
+  font-family: "Exo 2", sans-serif;
+  font-size: 1.4em;
+}
+
+.number-input-wrapper {
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  display: flex;
+}
+
+.number-input-buttons {
+  justify-content: space-between;
+  width: 80px;
+  margin-top: 10px;
+  display: flex;
+}
+
+.number-input-buttons button {
+  color: #0fc;
+  cursor: pointer;
+  background-color: #0000;
+  border: 1px solid #07c;
+  border-radius: 0 0 5px;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-family: "Exo 2", sans-serif;
+  font-weight: 600;
+  transition: box-shadow .3s, border-color .3s;
+  display: flex;
+  box-shadow: 0 0 5px #07c;
+}
+
+.number-input-buttons button:hover {
+  background-color: #0000;
+  border-color: #0af;
+  box-shadow: 0 0 10px #0af;
+}
+
+.number-input-buttons button:first-child {
+  border-radius: 0 5px;
+}
+
+.number-input-buttons button:last-child {
+  border-radius: 0 0 5px;
+}
+
+button {
+  color: #000;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0;
+  background-color: #f60;
+  border: none;
+  border-radius: 20px 5px;
+  margin-top: 20px;
+  padding: 12px 20px;
+  font-family: "Exo 2", sans-serif;
+  font-weight: 600;
+  transition: transform .5s ease-in-out;
+  animation: 1.5s 1s forwards fadeIn;
+  transform: translateY(0);
+  box-shadow: 0 0 10px #f60;
+}
+
+button:hover {
+  background-color: #f80;
+  box-shadow: 0 0 15px #f80;
+}
+
+.join-group {
+  opacity: 0;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  transition: transform .5s ease-in-out;
+  animation: 1.5s 1.2s forwards fadeIn;
+  display: flex;
+  transform: translateY(0);
+}
+
+.join-group button {
+  opacity: .5;
+  cursor: not-allowed;
+  color: #888;
+  background-color: #333;
+  width: 80px;
+  margin-left: 10px;
+  font-family: "Exo 2", sans-serif;
+  transition: opacity .3s, box-shadow .3s, color .3s;
+}
+
+.join-group button.active {
+  opacity: 1;
+  cursor: pointer;
+  color: #000;
+  background-color: #f60;
+  box-shadow: 0 0 10px #f60;
+}
+
+.join-group button.active:hover {
+  background-color: #f80;
+  box-shadow: 0 0 15px #f80;
+}
+
+.join-group input[type="text"] {
+  width: 80px;
+  margin-left: 10px;
+  font-family: "Exo 2", sans-serif;
+}
+
+.title-above {
+  color: #f8eedf;
+  text-shadow: 0 0 2px #f90;
+  opacity: 0;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 0;
+  margin-bottom: 30px;
+  font-family: Orbitron, sans-serif;
+  transition: transform .5s ease-in-out;
+  animation: 1s forwards fadeIn;
+  display: flex;
+  transform: translateY(0);
+}
+
+.below-box-text {
+  color: #fff;
+  opacity: 0;
+  margin-top: 20px;
+  font-family: "Exo 2", sans-serif;
+  transition: transform .5s ease-in-out;
+  animation: 1.5s 1.4s forwards fadeIn;
+  transform: translateY(0);
+}
+
+#loginContent {
+  z-index: 1;
+  position: relative;
+}
+
+#iframeBG {
+  z-index: -1;
+  border: none;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+</style>
+</head>
+<body>
+  <iframe src="https://my.spline.design/untitled-ZPCrZyo3D7Clg1NxTuVecM2w/" id="iframeBG"></iframe>
+  <div id="loginContent">
+    <h1 class="title-above">
+      HitCore
+    </h1>
+    <div class="container">
+
+
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" value="player">
+      </div>
+
+      <div class="form-group">
+        <label for="initialHealth">Initial Hitpoints:</label>
+        <div class="number-input-wrapper">
+          <input type="number" id="initialHealth" value="50" min="0">
+        </div>
+      </div>
+
+      <button id="startGameButton">Start Game</button>
+
+      <div class="join-group">
+        <button id="joinGameButton">Join Game</button>
+        <input type="text" id="roomId" placeholder="Room ID" required="">
+      </div>
+
+    </div>
+    <p class="below-box-text">Tabletop Companion App</p>
+  </div>
+  
+
+  <script>let clickedStartGame = false;
+document.getElementById('startGameButton').addEventListener('click', function() {
+    const username = document.getElementById('username').value;
+    const initialHealth = document.getElementById('initialHealth').value;
+    console.log(`Starting game with username: ${username}, initial health: ${initialHealth}`);
+    // Add class to trigger animation
+    document.querySelector('.container').style.transform = 'translateY(-100vh)';
+    document.querySelector('h1').style.transform = 'translateY(-100vh)';
+    document.querySelectorAll('.form-group').forEach((element)=>{
+        element.style.transform = 'translateY(-100vh)';
+    });
+    document.querySelector('button').style.transform = 'translateY(-100vh)';
+    document.querySelector('.join-group').style.transform = 'translateY(-100vh)';
+    document.querySelector('.below-box-text').style.transform = 'translateY(-100vh)';
+    // Change background to black and fade out image.
+    document.body.style.backgroundImage = 'linear-gradient(to bottom, black, black), none';
+    document.body.style.backgroundColor = 'black';
+    // Call BeginGame function after animation completes
+    clickedStartGame = true;
+    setTimeout(BeginGame, 1400); // Changed to 2000 for 2 seconds
+});
+document.getElementById('joinGameButton').addEventListener('click', function() {
+    if (joinGameButton.classList.contains('active')) {
+        const username = document.getElementById('username').value;
+        const initialHealth = document.getElementById('initialHealth').value;
+        const roomId = document.getElementById('roomId').value;
+        console.log(`Joining room ${roomId} as ${username}`);
+        // Add class to trigger animation
+        document.querySelector('.container').style.transform = 'translateY(-100vh)';
+        document.querySelector('h1').style.transform = 'translateY(-100vh)';
+        document.querySelectorAll('.form-group').forEach((element)=>{
+            element.style.transform = 'translateY(-100vh)';
+        });
+        document.querySelector('button').style.transform = 'translateY(-100vh)';
+        document.querySelector('.join-group').style.transform = 'translateY(-100vh)';
+        document.querySelector('.below-box-text').style.transform = 'translateY(-100vh)';
+        // Change background to black and fade out image
+        document.body.style.backgroundImage = 'linear-gradient(to bottom, black, black), none';
+        document.body.style.backgroundColor = 'black';
+        // Call BeginGame function after animation completes
+        setTimeout(BeginGame, 1400); // Changed to 2000 for 2 seconds
+    }
+});
+const joinGameButton = document.getElementById('joinGameButton');
+const roomIdInput = document.getElementById('roomId');
+const usernameInput = document.getElementById('username');
+// Function to check room ID length
+function checkRoomIdLength() {
+    if (roomIdInput.value.length >= 4) {
+        joinGameButton.classList.add('active'); // Add the active class
+        joinGameButton.disabled = false; // Enable the button
+    } else {
+        joinGameButton.classList.remove('active'); // Remove the active class
+        joinGameButton.disabled = true; // Disable the button
+    }
+}
+// Event listener for room ID input
+roomIdInput.addEventListener('input', checkRoomIdLength);
+// Initial check in case there's a value in the input on page load
+checkRoomIdLength();
+// Clear default username on focus
+usernameInput.addEventListener('focus', function() {
+    if (this.value === 'player') this.value = '';
+});
+// Get the input and buttons
+const healthInput = document.getElementById('initialHealth');
+function BeginGame() {
+    console.log("BeginGame function called!");
+    const username = document.getElementById('username').value;
+    const initialHealth = document.getElementById('initialHealth').value;
+    let roomId = document.getElementById('roomId').value;
+    if (roomId == '' || clickedStartGame) roomId = generateRandomString(4);
+    // Construct the URL with parameters
+    const url = `game.html?username=${encodeURIComponent(username)}&initialHealth=${encodeURIComponent(initialHealth)}&roomId=${encodeURIComponent(roomId)}`;
+    // Redirect to the game.html page
+    window.location.href = url;
+}
+function generateRandomString(length) {
+    const characters = 'KLPQWXYZ123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for(let i = 0; i < length; i++)result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    return result;
+}
+
+</script>
+<script src="/login.9bf74774.js"></script></body>
+</html>
