@@ -72,7 +72,7 @@ io.on("connection", (socket) => {
   app2.use(express.static(path.join(__dirname,"public/dist")));
 
   app2.get("*",(req,res)=>{
-    res.sendFile(path.join(__dirname,"public/dist","login.html"));
+    res.sendFile(path.join(__dirname,"public/dist","index.html"));
   })
   app2.listen(PORT_APP,()=>{
     console.log(`app server is running on http://localhost:${PORT_APP}`);
